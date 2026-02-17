@@ -1,0 +1,91 @@
+/* ── Toolbar / search bar + date picker ───────────────────────────── */
+.toolbar {
+  padding: 16px 0;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap; /* wraps onto a second line on small screens */
+}
+
+.toolbar mat-form-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* "Clear dates" link below the date range field */
+.clear-link {
+  cursor: pointer;
+  color: #1976d2;
+  text-decoration: underline;
+  font-size: 0.8rem;
+}
+
+.clear-link:hover {
+  color: #0d47a1;
+}
+
+/* ── Table ────────────────────────────────────────────────────────── */
+table {
+  width: 100%;
+}
+
+/* Right-align numbers so decimal points line up */
+th.mat-header-cell.num,
+td.mat-cell.num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Status badges ───────────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.badge-paid {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.badge-unpaid {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.badge-partiallypaid {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* ── Empty state row ─────────────────────────────────────────────── */
+.no-data td {
+  text-align: center;
+  padding: 24px;
+  color: #888;
+  font-style: italic;
+}
+
+.context-menu {
+  position: fixed;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 180px;
+  overflow: hidden;
+}
+
+.menu-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.menu-item:hover {
+  background: #f0f0f0;
+}

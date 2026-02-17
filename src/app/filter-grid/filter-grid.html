@@ -1,0 +1,133 @@
+<!-- ── Search bar + Date range picker ─────────────────────────────── -->
+<div class="toolbar">
+  <!-- Text search -->
+  <mat-form-field appearance="outline">
+    <mat-label>Search invoices</mat-label>
+    <input matInput [formControl]="searchCtrl" placeholder="Invoice #, client, status..." />
+  </mat-form-field>
+
+  <!-- Date range picker - both start and end live in one field -->
+  <mat-form-field appearance="outline">
+    <mat-label>Date range</mat-label>
+    <mat-date-range-input [rangePicker]="picker" [formGroup]="dateRange">
+      <input matStartDate formControlName="start" placeholder="Start date" />
+      <input matEndDate formControlName="end" placeholder="End date" />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+
+    <!-- Show a hint with a clear link when a date range is active -->
+    @if (dateRange.value.start || dateRange.value.end) {
+      <mat-hint>
+        <a class="clear-link" (click)="clearDateRange()">Clear dates</a>
+      </mat-hint>
+    }
+  </mat-form-field>
+</div>
+
+<!-- ── Table ─────────────────────────────────────────────────────────── -->
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z1">
+  <!-- Invoice # -->
+  <ng-container matColumnDef="invoiceNo">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      (contextmenu)="onRightClick($event, 'invoiceNo')"
+      [style.backgroundColor]="columnsHighlights['invoiceNo']"
+      class="headerCell"
+    >
+      Invoice #
+    </th>
+    <td mat-cell *matCellDef="let row">{{ row.invoiceNo }}</td>
+  </ng-container>
+
+  <!-- Client -->
+  <ng-container matColumnDef="clientName">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      (contextmenu)="onRightClick($event, 'clientName')"
+      [style.backgroundColor]="columnsHighlights['invoiceNo']"
+      class="headerCell"
+    >
+      Client
+    </th>
+    <td mat-cell *matCellDef="let row">{{ row.clientName }}</td>
+  </ng-container>
+
+  <!-- Date -->
+  <ng-container matColumnDef="date">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      (contextmenu)="onRightClick($event, 'date')"
+      [style.backgroundColor]="columnsHighlights['invoiceNo']"
+      class="headerCell"
+    >
+      Date
+    </th>
+    <td mat-cell *matCellDef="let row">{{ row.date }}</td>
+  </ng-container>
+
+  <!-- Total (right-aligned with currency) -->
+  <ng-container matColumnDef="total">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      class="num"
+      (contextmenu)="onRightClick($event, 'total')"
+      [style.backgroundColor]="columnsHighlights['invoiceNo']"
+    >
+      Total
+    </th>
+    <td mat-cell *matCellDef="let row" class="num">R {{ row.total | number: '1.2-2' }}</td>
+  </ng-container>
+
+  <!-- Status (colour-coded badge) -->
+  <ng-container matColumnDef="status">
+    <th
+      mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      (contextmenu)="onRightClick($event, 'status')"
+      [style.backgroundColor]="columnsHighlights['invoiceNo']"
+      class="headerCell"
+    >
+      Status
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <span [class]="'badge badge-' + row.status.toLowerCase()">
+        {{ row.status === 'PartiallyPaid' ? 'Partially Paid' : row.status }}
+      </span>
+    </td>
+  </ng-container>
+
+  <!-- Row definitions -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+  <!-- Empty state - shows when filters match nothing -->
+  <tr class="mat-row no-data" *matNoDataRow>
+    <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+      No invoices match your filters.
+    </td>
+  </tr>
+</table>
+
+<!-- The Context Menu (When right clicking on headers) -->
+<div
+  *ngIf="showContextmenu"
+  class="context-menu"
+  [style.left.px]="contextMenuX"
+  [style.top.px]="contextMenuY"
+  (click)="$event.stopPropagation()"
+>
+  <div class="menu-item" (click)="highlightYellow()">🟡 Highlight Yellow</div>
+  <div class="menu-item" (click)="highlightGreen()">🟢 Highlight Green</div>
+  <div class="menu-item" (click)="highlightRed()">🔴 Highlight Red</div>
+  <div class="menu-item" (click)="clearHighlights()">✖ Clear Highlight</div>
+</div>
